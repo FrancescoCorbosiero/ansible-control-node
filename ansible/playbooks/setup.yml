@@ -1,0 +1,6 @@
+---
+- name: Basic server setup
+  hosts: vps
+  become: true
+  roles:
+    - common

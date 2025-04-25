@@ -70,8 +70,14 @@ This setup provides instant connection to remote node.
     ansible-playbook -i inventory.ini bootstrap-python.yml
     ```
 
-3. Run playbooks
+3. Check playbook availability
 
     ```bash
-    
+    ansible-playbook -i inventory.ini remote_docker_info.yml
+    ```
+
+4. Run setup playbook
+
+   ```bash
+    docker compose exec ansible /ansible/run-playbook.sh playbooks/setup.yml
     ```
