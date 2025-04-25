@@ -1,0 +1,11 @@
+services:
+  ansible:
+    build: .
+    container_name: ansible
+    volumes:
+      - ./ansible:/ansible
+      #- ~/.ssh:/root/.ssh:ro  # Mount your SSH keys (read-only)
+    stdin_open: true
+    environment:
+      - ANSIBLE_CONFIG=/ansible/ansible.cfg
+    tty: true

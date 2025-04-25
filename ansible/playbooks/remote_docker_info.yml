@@ -1,0 +1,11 @@
+---
+- hosts: vps
+  become: true
+  tasks:
+    - name: Get Docker version on remote VPS
+      command: docker --version
+      register: docker_version_output
+
+    - name: Display Docker version
+      debug:
+        var: docker_version_output.stdout
