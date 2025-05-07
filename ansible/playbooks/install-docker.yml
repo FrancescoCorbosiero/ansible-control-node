@@ -1,5 +1,5 @@
 ---
-- hosts: 185.188.249.54
+- hosts: vps
   become: true  # Allows Ansible to run commands as root (using sudo)
   tasks:
     - name: Update apt package cache

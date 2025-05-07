@@ -1,2 +1,3 @@
 # ssh keys
-/ssh-keys
+/ssh-keys/ansible
+/ssh-keys/ansible.pub

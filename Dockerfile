@@ -16,6 +16,10 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Ansible Galaxy roles
+RUN ansible-galaxy role install geerlingguy.docker
+RUN ansible-galaxy collection install community.docker
+
 # Create a working directory
 WORKDIR /ansible
 

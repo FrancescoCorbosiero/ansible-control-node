@@ -23,3 +23,7 @@ ping:
 	  --key-file /root/.ssh/ansible \
 	  -i /ansible/inventory/inventory.ini \
 	  -m ping
+
+test:
+	docker compose up -d
+	docker compose exec ansible /ansible/run-playbook.sh playbooks/setup.yml

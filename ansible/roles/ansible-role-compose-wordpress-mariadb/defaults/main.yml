@@ -1,0 +1,20 @@
+---
+compose_base_dir: compose
+templates_dir: templates
+wordpress_project_name: yourwebsite
+traefik_container_name: traefik-traefik-1
+
+wordpress_required_networks:
+  - traefik-network
+  - wordpress-network
+
+# Wordpress site variables
+wordpress_domain: yoursite.com
+wordpress_admin_email: admin@yoursite.com
+wordpress_admin_user: admin
+wordpress_admin_pass: adminpassword
+wordpress_smtp_host: smtp.yourmailserver.com
+
+# Docker images
+wordpress_image_tag: bitnami/wordpress:latest
+wordpress_mariadb_image_tag: bitnami/mariadb:latest

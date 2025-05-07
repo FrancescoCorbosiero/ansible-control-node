@@ -1,0 +1,63 @@
+---
+- name: Ensure required Docker networks exist
+  community.docker.docker_network:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ wordpress_required_networks }}"
+
+- name: Check if Traefik container is running
+  shell: |
+    docker ps --format '{{ "{{.Names}}" }}' | grep -w "{{ traefik_container_name }}"
+  register: traefik_container_running
+  failed_when: traefik_container_running.rc != 0
+  ignore_errors: no
+
+- name: Check Traefik container health
+  shell: |
+    docker inspect --format='{{ "{{.State.Health.Status}}" }}' "{{ traefik_container_name }}"
+  register: traefik_container_health
+  failed_when: false
+  changed_when: false
+
+- name: Show last Traefik logs if container unhealthy
+  block:
+    - name: Display last 20 log lines from Traefik
+      shell: docker logs --tail 20 "{{ traefik_container_name }}"
+      register: traefik_logs
+      ignore_errors: true
+
+    - name: Fail if Traefik is unhealthy
+      fail:
+        msg: |
+          Traefik container is not healthy.
+          Health status: "{{ traefik_container_health.stdout }}"
+          Last logs:
+          {{ traefik_logs.stdout }}
+  when: traefik_container_health.stdout not in ["healthy", "none"]
+
+- name: Proceed even if Traefik has no health check
+  debug:
+    msg: "⚠️ Traefik does not have a health check defined, proceeding..."
+  when: traefik_container_health.stdout == "none"
+
+- name: Create Wordpress project directory
+  file:
+    path: "{{ compose_base_dir }}/{{ wordpress_project_name }}"
+    state: directory
+    mode: '0755'
+
+- name: Generate Wordpress .env file
+  template:
+    src: wordpress.env.j2
+    dest: "{{ compose_base_dir }}/{{ wordpress_project_name }}/.env"
+
+- name: Generate docker-compose.yml file
+  template:
+    src: wordpress-compose.yml.j2
+    dest: "{{ compose_base_dir }}/{{ wordpress_project_name }}/docker-compose.yml"
+
+- name: Display project created message
+  debug:
+    msg: |
+      ✅ Project created at {{ compose_base_dir }}/{{ wordpress_project_name }}
+      ➡️  To start it: cd {{ compose_base_dir }}/{{ wordpress_project_name }} && docker compose --env-file .env up -d

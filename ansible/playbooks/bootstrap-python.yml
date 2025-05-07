@@ -1,6 +1,0 @@
-- name: Bootstrap Python on remote
-  hosts: all
-  become: yes
-  tasks:
-    - name: Ensure Python is installed
-      raw: apt update && apt install -y python3

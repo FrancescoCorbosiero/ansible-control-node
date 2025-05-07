@@ -3,4 +3,8 @@
   hosts: vps
   become: true
   roles:
-    - common
+    - ansible-role-firewall
+    - ansible-role-docker
+    - ansible-role-compose-traefik
+    - ansible-role-compose-wordpress-mariadb
+    #- ansible-role-compose-wordpress-redis
